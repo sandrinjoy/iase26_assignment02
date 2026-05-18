@@ -4,6 +4,7 @@ import java.io.File
 import kotlin.io.path.createTempFile
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.TestMethodOrder
 
@@ -40,6 +41,13 @@ class FileBettingServiceTest {
             System.getProperty("java.io.tmpdir"),
             "worldcup-shared-bets-${ProcessHandle.current().pid()}.txt"
         )
+    }
+
+    @AfterEach
+    fun cleanup() {
+        if (SHARED_BET_FILE.exists()) {
+            SHARED_BET_FILE.delete()
+        }
     }
 
     @Test

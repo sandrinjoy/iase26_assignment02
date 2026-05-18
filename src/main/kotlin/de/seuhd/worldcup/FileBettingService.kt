@@ -1,6 +1,8 @@
 package de.seuhd.worldcup
 
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardOpenOption
 
 /**
  * File-backed bet store. Each bet is persisted as one `matchId,predictionCode`
@@ -9,10 +11,14 @@ import java.io.File
  */
 class FileBettingService(private val file: File) {
 
+    private val lock = Any()
+
     fun placeBet(bet: Bet) {
-        val bets = readBets()
-        bets[bet.matchId] = bet
-        writeBets(bets.values)
+        synchronized(lock) {
+            val bets = readBets()
+            bets[bet.matchId] = bet
+            writeBets(bets.values)
+        }
     }
 
     fun getBets(): List<Bet> = readBets().values.toList()
